@@ -686,16 +686,14 @@ void PlayerControl::updatePlayerControl()
 
 /// Toggle record mode
 void PlayerControl::recBtnClicked(Button* ref) {
-	if ( m_pEngine->getState() != STATE_PLAYING ) {
-		if (ref->isPressed()) {
-			Preferences::get_instance()->setRecordEvents(true);
-			(HydrogenApp::get_instance())->setScrollStatusBarMessage(trUtf8("Record midi events = On" ), 2000 );
-		}
-		else {
-			Preferences::get_instance()->setRecordEvents(false);
-			(HydrogenApp::get_instance())->setScrollStatusBarMessage(trUtf8("Record midi events = Off" ), 2000 );
-		}
-	}
+  if (ref->isPressed()) {
+    Preferences::get_instance()->setRecordEvents(true);
+    (HydrogenApp::get_instance())->setScrollStatusBarMessage(trUtf8("Record midi events = On" ), 2000 );
+  }
+  else {
+    Preferences::get_instance()->setRecordEvents(false);
+    (HydrogenApp::get_instance())->setScrollStatusBarMessage(trUtf8("Record midi events = Off" ), 2000 );
+  }
 }
 
 
