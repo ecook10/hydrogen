@@ -9,3 +9,4 @@ moc_*.cc
 *.cbp
 *.layout
 hydrogen.*
+.*.swp
