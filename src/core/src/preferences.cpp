@@ -144,7 +144,7 @@ Preferences::Preferences()
 	}
 
 	__lastspatternDirectory = QDir::homePath();
-	__lastsampleDirectory = QDir::homePath(); //audio file browser
+	__lastsampleDirectory = QDir::homePath().append("/beatlab/samples/"); //audio file browser
 	__playsamplesonclicking = false; // audio file browser
 	__playselectedinstrument = false; // midi keyboard and keyboard play only selected instrument
 
