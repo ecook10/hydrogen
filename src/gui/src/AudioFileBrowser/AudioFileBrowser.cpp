@@ -54,7 +54,7 @@ AudioFileBrowser::AudioFileBrowser ( QWidget* pParent )
 	m_pDirModel->setNameFilters( QStringList() << "*.ogg" << "*.OGG" << "*.wav" << "*.WAV" << "*.flac"<< "*.FLAC" << "*.aiff" << "*.AIFF"<< "*.au" << "*.AU" );
 	m_pDirModel->setSorting( QDir::DirsFirst |QDir::Name );
 	m_ModelIndex = m_pDirModel->index( QDir::currentPath() );
-	
+
 	m_pPlayBtn->setEnabled( false );
 	m_pStopBtn->setEnabled( false );
 	openBTN->setEnabled( false );
@@ -63,9 +63,8 @@ AudioFileBrowser::AudioFileBrowser ( QWidget* pParent )
 	m_pTree->setModel( m_pDirModel );
 	m_pTree->resize( 799, 310 );
 	m_pTree->header()->resizeSection( 0, 405 );
-	m_pTree->setAlternatingRowColors( true );
 	m_pTree->setRootIndex( m_pDirModel->index( Preferences::get_instance()->__lastsampleDirectory ) );
-	
+
 	pathLineEdit->setText( Preferences::get_instance()->__lastsampleDirectory );
 	m_pSampleFilename = "";
 	m_pSelectedFile << "false" << "false";
@@ -93,7 +92,10 @@ AudioFileBrowser::AudioFileBrowser ( QWidget* pParent )
 
 	connect( m_pTree, SIGNAL( clicked( const QModelIndex&) ), SLOT( clicked( const QModelIndex& ) ) );
 	connect( m_pTree, SIGNAL( doubleClicked( const QModelIndex&) ), SLOT( doubleClicked( const QModelIndex& ) ) );
-	connect( pathLineEdit, SIGNAL( returnPressed() ), SLOT( updateModelIndex() ) );	
+	connect( pathLineEdit, SIGNAL( returnPressed() ), SLOT( updateModelIndex() ) );
+
+  // Set focus on the main viewport to allow immediate arrow key scrolling
+  m_pTree->findChild<QWidget *>("qt_scrollarea_viewport")->setFocus();
 }
 
 
@@ -133,34 +135,49 @@ void AudioFileBrowser::getEnvironment()
 //kde
 	if(desktopSession == "kde"){
 		QFile envfile( QDir::homePath() + "/.kde/share/config/kdeglobals");
-	
+
 		if (!envfile.open(QIODevice::ReadOnly | QIODevice::Text))
 			return;
-		
+
 		QTextStream envin( &envfile );
 		while ( !envin.atEnd() ) {
 			QString envLine = envin.readLine();
 			if(envLine == QString("SingleClick=true") ){
 				m_SingleClick = true;
 				break;
-			}		
+			}
 		}
 	}
 
 //for gnome, xfce and all others we use double click as default
-
-	
-	
 }
 
 
 
 void AudioFileBrowser::keyPressEvent (QKeyEvent *ev)
 {
-	if( ev->modifiers()==Qt::ControlModifier ){
+
+	if ( ev->modifiers() == Qt::ControlModifier ) {
 		m_pTree->setSelectionMode( QAbstractItemView::MultiSelection );
 		openBTN->setEnabled( true );
-	}	
+	}
+
+  if ( ev->key() == Qt::Key_Return ) {
+
+    if ( ev->modifiers() == Qt::ControlModifier ) {
+      // Choose current sample
+      on_openBTN_clicked();
+
+    } else {
+      // Preview & select current sample
+      clicked(m_pTree->currentIndex());
+    }
+
+  } else if ( ev->key() == Qt::Key_Backspace ) {
+    // Cancel sample selection
+    on_cancelBTN_clicked();
+  }
+
 }
 
 
@@ -222,7 +239,7 @@ void AudioFileBrowser::browseTree( const QModelIndex& index )
 	pathLineEdit->setText( path );
 	m_pSampleWaveDisplay->updateDisplay( m_sEmptySampleFilename );
 
-	updateModelIndex(); //with this you have a navigation like konqueror 
+	//updateModelIndex(); // with this you have a navigation like konqueror, which i do not want
 
 	if ( m_pDirModel->isDir( index ) ){
 		m_pPlayBtn->setEnabled( false );
@@ -325,7 +342,6 @@ void AudioFileBrowser::on_m_pStopBtn_clicked()
 
 void AudioFileBrowser::on_cancelBTN_clicked()
 {
-	Preferences::get_instance()->__lastsampleDirectory = pathLineEdit->text();
 	m_pSelectedFile << "false" << "false" << "";
 	reject();
 }
@@ -352,7 +368,6 @@ void AudioFileBrowser::on_openBTN_clicked()
 		}
 	}
 
-	Preferences::get_instance()->__lastsampleDirectory = pathLineEdit->text();
 	accept();
 }
 
