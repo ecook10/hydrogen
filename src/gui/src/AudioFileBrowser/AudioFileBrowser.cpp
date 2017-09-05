@@ -163,8 +163,21 @@ void AudioFileBrowser::keyPressEvent (QKeyEvent *ev)
 	}
 
   if ( ev->key() == Qt::Key_Return ) {
-    clicked(m_pTree->currentIndex());
+
+    if ( ev->modifiers() == Qt::ControlModifier ) {
+      // Choose current sample
+      on_openBTN_clicked();
+
+    } else {
+      // Preview & select current sample
+      clicked(m_pTree->currentIndex());
+    }
+
+  } else if ( ev->key() == Qt::Key_Backspace ) {
+    // Cancel sample selection
+    on_cancelBTN_clicked();
   }
+
 }
 
 
