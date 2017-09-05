@@ -54,7 +54,7 @@ AudioFileBrowser::AudioFileBrowser ( QWidget* pParent )
 	m_pDirModel->setNameFilters( QStringList() << "*.ogg" << "*.OGG" << "*.wav" << "*.WAV" << "*.flac"<< "*.FLAC" << "*.aiff" << "*.AIFF"<< "*.au" << "*.AU" );
 	m_pDirModel->setSorting( QDir::DirsFirst |QDir::Name );
 	m_ModelIndex = m_pDirModel->index( QDir::currentPath() );
-	
+
 	m_pPlayBtn->setEnabled( false );
 	m_pStopBtn->setEnabled( false );
 	openBTN->setEnabled( false );
@@ -63,9 +63,8 @@ AudioFileBrowser::AudioFileBrowser ( QWidget* pParent )
 	m_pTree->setModel( m_pDirModel );
 	m_pTree->resize( 799, 310 );
 	m_pTree->header()->resizeSection( 0, 405 );
-	m_pTree->setAlternatingRowColors( true );
 	m_pTree->setRootIndex( m_pDirModel->index( Preferences::get_instance()->__lastsampleDirectory ) );
-	
+
 	pathLineEdit->setText( Preferences::get_instance()->__lastsampleDirectory );
 	m_pSampleFilename = "";
 	m_pSelectedFile << "false" << "false";
@@ -93,7 +92,10 @@ AudioFileBrowser::AudioFileBrowser ( QWidget* pParent )
 
 	connect( m_pTree, SIGNAL( clicked( const QModelIndex&) ), SLOT( clicked( const QModelIndex& ) ) );
 	connect( m_pTree, SIGNAL( doubleClicked( const QModelIndex&) ), SLOT( doubleClicked( const QModelIndex& ) ) );
-	connect( pathLineEdit, SIGNAL( returnPressed() ), SLOT( updateModelIndex() ) );	
+	connect( pathLineEdit, SIGNAL( returnPressed() ), SLOT( updateModelIndex() ) );
+
+  // Set focus on the main viewport to allow immediate arrow key scrolling
+  m_pTree->findChild<QWidget *>("qt_scrollarea_viewport")->setFocus();
 }
 
 
@@ -160,7 +162,7 @@ void AudioFileBrowser::keyPressEvent (QKeyEvent *ev)
 	if( ev->modifiers()==Qt::ControlModifier ){
 		m_pTree->setSelectionMode( QAbstractItemView::MultiSelection );
 		openBTN->setEnabled( true );
-	}	
+	}
 }
 
 
