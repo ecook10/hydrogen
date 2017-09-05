@@ -325,7 +325,6 @@ void AudioFileBrowser::on_m_pStopBtn_clicked()
 
 void AudioFileBrowser::on_cancelBTN_clicked()
 {
-	Preferences::get_instance()->__lastsampleDirectory = pathLineEdit->text();
 	m_pSelectedFile << "false" << "false" << "";
 	reject();
 }
@@ -352,7 +351,6 @@ void AudioFileBrowser::on_openBTN_clicked()
 		}
 	}
 
-	Preferences::get_instance()->__lastsampleDirectory = pathLineEdit->text();
 	accept();
 }
 
