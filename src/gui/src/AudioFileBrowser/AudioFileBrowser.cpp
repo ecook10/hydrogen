@@ -135,34 +135,36 @@ void AudioFileBrowser::getEnvironment()
 //kde
 	if(desktopSession == "kde"){
 		QFile envfile( QDir::homePath() + "/.kde/share/config/kdeglobals");
-	
+
 		if (!envfile.open(QIODevice::ReadOnly | QIODevice::Text))
 			return;
-		
+
 		QTextStream envin( &envfile );
 		while ( !envin.atEnd() ) {
 			QString envLine = envin.readLine();
 			if(envLine == QString("SingleClick=true") ){
 				m_SingleClick = true;
 				break;
-			}		
+			}
 		}
 	}
 
 //for gnome, xfce and all others we use double click as default
-
-	
-	
 }
 
 
 
 void AudioFileBrowser::keyPressEvent (QKeyEvent *ev)
 {
-	if( ev->modifiers()==Qt::ControlModifier ){
+
+	if ( ev->modifiers() == Qt::ControlModifier ) {
 		m_pTree->setSelectionMode( QAbstractItemView::MultiSelection );
 		openBTN->setEnabled( true );
 	}
+
+  if ( ev->key() == Qt::Key_Return ) {
+    clicked(m_pTree->currentIndex());
+  }
 }
 
 
@@ -224,7 +226,7 @@ void AudioFileBrowser::browseTree( const QModelIndex& index )
 	pathLineEdit->setText( path );
 	m_pSampleWaveDisplay->updateDisplay( m_sEmptySampleFilename );
 
-	updateModelIndex(); //with this you have a navigation like konqueror 
+	//updateModelIndex(); // with this you have a navigation like konqueror, which i do not want
 
 	if ( m_pDirModel->isDir( index ) ){
 		m_pPlayBtn->setEnabled( false );
