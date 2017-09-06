@@ -1296,6 +1296,9 @@ bool MainForm::eventFilter( QObject *o, QEvent *e )
 		//int songnumber = 0;
 		HydrogenApp* app = HydrogenApp::get_instance();
 		Hydrogen* engine = Hydrogen::get_instance();
+
+    INFOLOG( to_string(k->key()).c_str() );
+
 		switch (k->key()) {
 		case Qt::Key_Space:
 			onPlayStopAccelEvent();
@@ -1368,6 +1371,40 @@ bool MainForm::eventFilter( QObject *o, QEvent *e )
 			app->getSongEditorPanel()->updateAll();
 			return TRUE;
 			break;
+
+
+    /* Misc Controls */
+
+    case Qt::Key_R :  // Toggle record
+      break;
+
+
+    /* Navigation Controls */
+
+    case Qt::Key_K :  // Move selected instrument down
+      break;
+
+    case Qt::Key_I :  // Move selected instrument up
+      break;
+
+    case Qt::Key_L :  // Open sample picker dialog
+      break;
+
+    case Qt::Key_J :  // Remove sample
+      break;
+
+    case Qt::Key_S :  // Move selected pattern down
+      break;
+
+    case Qt::Key_W :  // Move selected patter up
+      break;
+
+    case Qt::Key_D :  // Insert new pattern
+      break;
+
+    case Qt::Key_A :  // Remove pattern
+      break;
+
 		}
 
 		// virtual keyboard handling
