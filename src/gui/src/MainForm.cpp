@@ -1299,6 +1299,9 @@ bool MainForm::eventFilter( QObject *o, QEvent *e )
 
     INFOLOG( to_string(k->key()).c_str() );
 
+    int nSelected;
+    int nCount;
+
 		switch (k->key()) {
 		case Qt::Key_Space:
 			onPlayStopAccelEvent();
@@ -1363,10 +1366,12 @@ bool MainForm::eventFilter( QObject *o, QEvent *e )
 			return TRUE;
 			break;
 
-		case Qt::Key_L :
+		case Qt::Key_T :
 			engine->togglePlaysSelected();
-			QString msg = Preferences::get_instance()->patternModePlaysSelected() ? "Single pattern mode" : "Stacked pattern mode";
-			app->setStatusBarMessage( msg, 5000 );
+			app->setStatusBarMessage(
+          Preferences::get_instance()->patternModePlaysSelected() ? "Single pattern mode" : "Stacked pattern mode",
+          5000
+      );
 			app->getSongEditorPanel()->setModeActionBtn( Preferences::get_instance()->patternModePlaysSelected() );
 			app->getSongEditorPanel()->updateAll();
 			return TRUE;
@@ -1376,33 +1381,81 @@ bool MainForm::eventFilter( QObject *o, QEvent *e )
     /* Misc Controls */
 
     case Qt::Key_R :  // Toggle record
+      return FALSE;
+      break;
+
+    case Qt::Key_M:   // Toggle mixer
+      return FALSE;
+      break;
+
+    case Qt::Key_C:   // Toggle metronome
+      return FALSE;
       break;
 
 
-    /* Navigation Controls */
+    /* Pattern Editor Controls */
 
-    case Qt::Key_K :  // Move selected instrument down
+    // Move selected instrument down
+    case Qt::Key_K :
+      nSelected = engine->getSelectedInstrumentNumber() + 1;
+      nCount = engine->getSong()->get_instrument_list()->size();
+
+      if (nSelected < nCount) {
+        engine->setSelectedInstrumentNumber(nSelected);
+      }
+      return TRUE;
       break;
 
-    case Qt::Key_I :  // Move selected instrument up
+
+    // Move selected instrument up
+    case Qt::Key_I :
+      nSelected = engine->getSelectedInstrumentNumber() - 1;
+
+      if (nSelected > -1) {
+        engine->setSelectedInstrumentNumber(nSelected);
+      }
+      return TRUE;
       break;
 
-    case Qt::Key_L :  // Open sample picker dialog
+
+    // Open sample picker dialog
+    case Qt::Key_L :
+      return FALSE;
       break;
 
     case Qt::Key_J :  // Remove sample
+      return FALSE;
       break;
 
-    case Qt::Key_S :  // Move selected pattern down
+
+    // Move selected pattern down
+    case Qt::Key_S :
+      nSelected = engine->getSelectedPatternNumber() + 1;
+      nCount = engine->getSong()->get_pattern_list()->size();
+
+      if (nSelected < nCount) {
+        engine->setSelectedPatternNumber(nSelected);
+      }
+      return TRUE;
       break;
 
-    case Qt::Key_W :  // Move selected patter up
+
+    // Move selected pattern up
+    case Qt::Key_W :
+      nSelected = engine->getSelectedPatternNumber() - 1;
+
+      if (nSelected > -1) {
+        engine->setSelectedPatternNumber(nSelected);
+      }
+      return TRUE;
       break;
 
     case Qt::Key_D :  // Insert new pattern
+      return FALSE;
       break;
 
     case Qt::Key_A :  // Remove pattern
+      return FALSE;
       break;
 
 		}
