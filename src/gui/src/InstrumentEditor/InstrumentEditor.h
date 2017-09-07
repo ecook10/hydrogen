@@ -52,6 +52,8 @@ class InstrumentEditor : public QWidget, public H2Core::Object, public EventList
 	Q_OBJECT
 
 	public:
+		static InstrumentEditor* get_instance();
+
 		InstrumentEditor( QWidget* parent );
 		~InstrumentEditor();
 
@@ -65,6 +67,9 @@ class InstrumentEditor : public QWidget, public H2Core::Object, public EventList
 		virtual void rubberbandbpmchangeEvent();
 		//~ implements EventListener interface
 		void update();
+
+    // Allow loading a new layer externally
+		void loadLayer();
 
 	private slots:
 		void rotaryChanged(Rotary *ref);
@@ -88,6 +93,8 @@ class InstrumentEditor : public QWidget, public H2Core::Object, public EventList
 		void pSampleSelectionChanged( QString );
 
 	private:
+		static InstrumentEditor* m_pInstance;
+
 		H2Core::Instrument *m_pInstrument;
 		int m_nSelectedLayer;
 		int m_nSelectedComponent;
@@ -188,7 +195,6 @@ class InstrumentEditor : public QWidget, public H2Core::Object, public EventList
 		LCDDisplay *m_pCompoGainLCD;
 		//~ Component
 
-		void loadLayer();
 		void setAutoVelocity();
 		int findFreeDrumkitComponentId( int startingPoint = 0 );
 };

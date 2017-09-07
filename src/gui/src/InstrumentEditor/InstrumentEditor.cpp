@@ -52,7 +52,14 @@ using namespace H2Core;
 #include "LayerPreview.h"
 #include "AudioFileBrowser/AudioFileBrowser.h"
 
+InstrumentEditor* InstrumentEditor::m_pInstance = NULL;
 const char* InstrumentEditor::__class_name = "InstrumentEditor";
+
+InstrumentEditor* InstrumentEditor::get_instance()
+{
+	return m_pInstance;
+}
+
 
 InstrumentEditor::InstrumentEditor( QWidget* pParent )
 	: QWidget( pParent )
@@ -61,6 +68,8 @@ InstrumentEditor::InstrumentEditor( QWidget* pParent )
 	, m_nSelectedLayer( 0 )
 {
 	setFixedWidth( 290 );
+
+  m_pInstance = this;
 
 	// Instrument properties top
 	m_pInstrumentPropTop = new PixmapWidget( this );

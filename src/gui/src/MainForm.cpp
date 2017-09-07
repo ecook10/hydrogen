@@ -1420,7 +1420,8 @@ bool MainForm::eventFilter( QObject *o, QEvent *e )
 
     // Open sample picker dialog
     case Qt::Key_L :
-      return FALSE;
+      InstrumentEditor::get_instance()->loadLayer();
+      return TRUE;
       break;
 
     case Qt::Key_J :  // Remove sample
