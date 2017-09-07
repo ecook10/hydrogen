@@ -54,6 +54,11 @@ class InstrumentLine : public PixmapWidget
 		void setMuted(bool isMuted);
 		void setSoloed( bool soloed );
 
+    void functionInsertInstrument();
+
+  public slots:
+		void functionDeleteInstrument();
+
 	private slots:
 		void functionClearNotes();
 
@@ -71,7 +76,6 @@ class InstrumentLine : public PixmapWidget
 		void functionPasteInstrumentPatternExec(int patternID);
 
 		void functionRandomizeVelocity();
-		void functionDeleteInstrument();
 		void muteClicked();
 		void soloClicked();
 
@@ -107,6 +111,9 @@ class PatternEditorInstrumentList : public QWidget, public H2Core::Object {
 		virtual void dragEnterEvent(QDragEnterEvent *event);
 		virtual void dropEvent(QDropEvent *event);
 
+    void deleteCurrentInstrument();
+    void insertInstrument();
+
 
 	public slots:
 		void updateInstrumentLines();
@@ -124,6 +131,7 @@ class PatternEditorInstrumentList : public QWidget, public H2Core::Object {
 		QPoint __drag_start_position;
 
 		InstrumentLine* createInstrumentLine();
+    InstrumentLine* getCurrInstrumentLine();
 
 };
 

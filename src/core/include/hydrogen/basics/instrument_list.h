@@ -148,6 +148,8 @@ class InstrumentList : public H2Core::Object
 		 */
 		static InstrumentList* load_from( XMLNode* node, const QString& dk_path, const QString& dk_name );
 
+    int newID();
+
 	private:
 		std::vector<Instrument*> __instruments;            ///< the list of instruments
 };

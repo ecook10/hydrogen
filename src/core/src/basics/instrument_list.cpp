@@ -215,6 +215,19 @@ void InstrumentList::move( int idx_a, int idx_b )
 	__instruments.insert( __instruments.begin() + idx_b, tmp );
 }
 
+int InstrumentList::newID()
+{
+	int nID = -1;
+	for ( uint i = 0; i < size(); ++i ) {
+		Instrument* pInstr = get( i );
+		if ( pInstr->get_id() > nID ) {
+			nID = pInstr->get_id();
+		}
+	}
+  return nID + 1;
+}
+
 };
+
 
 /* vim: set softtabstop=4 expandtab: */

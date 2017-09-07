@@ -54,6 +54,7 @@
 #include "Mixer/Mixer.h"
 #include "InstrumentEditor/InstrumentEditorPanel.h"
 #include "PatternEditor/PatternEditorPanel.h"
+#include "PatternEditor/PatternEditorInstrumentList.h"
 #include "SongEditor/SongEditor.h"
 #include "SongEditor/SongEditorPanel.h"
 #include "SoundLibrary/SoundLibraryPanel.h"
@@ -276,7 +277,7 @@ void MainForm::createMenuBar()
 
 	m_pFileMenu->addAction( trUtf8( "Export &MIDI file" ), this, SLOT( action_file_export_midi() ), QKeySequence( "Ctrl+M" ) );
 	m_pFileMenu->addAction( trUtf8( "&Export song" ), this, SLOT( action_file_export() ), QKeySequence( "Ctrl+E" ) );
-	m_pFileMenu->addAction( trUtf8( "Export &LilyPond file" ), this, SLOT( action_file_export_lilypond() ), QKeySequence( "Ctrl+L" ) );
+	m_pFileMenu->addAction( trUtf8( "Export &LilyPond file" ), this, SLOT( action_file_export_lilypond() ), QKeySequence( "Ctrl+Shift+L" ) );
 
 
 #ifndef Q_OS_MACX
@@ -1418,16 +1419,32 @@ bool MainForm::eventFilter( QObject *o, QEvent *e )
       break;
 
 
-    // Open sample picker dialog
+    // Choose new instrument
     case Qt::Key_L :
-      InstrumentEditor::get_instance()->loadLayer();
+      if (k->modifiers() == Qt::ControlModifier) {
+        // Insert
+        // TODO prompt for starting layer after inserting empty instrument
+        app->getPatternEditorPanel()->getInstrumentList()->insertInstrument();
+      } else {
+        // Replace
+        InstrumentEditor::get_instance()->loadLayer();
+      }
+      // TODO maybe automatically enable rename
       return TRUE;
       break;
 
-    case Qt::Key_J :  // Remove sample
-      return FALSE;
+
+    // Remove instrument
+    case Qt::Key_J :
+      if (k->modifiers() == Qt::ControlModifier) {
+        app->getPatternEditorPanel()->getInstrumentList()->deleteCurrentInstrument();
+      } else {
+        return FALSE;
+      }
       break;
 
+
+    /* Song Editor Controls */
 
     // Move selected pattern down
     case Qt::Key_S :
