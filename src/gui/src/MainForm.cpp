@@ -1458,7 +1458,6 @@ bool MainForm::eventFilter( QObject *o, QEvent *e )
       return TRUE;
       break;
 
-
     // Remove instrument
     case Qt::Key_J :
       if (k->modifiers() == Qt::ControlModifier) {
