@@ -72,6 +72,7 @@ class PatternEditorPanel : public QWidget, public EventListener, public H2Core::
 		void updateSLnameLabel();
 		void displayorHidePrePostCB();
 		void updatePianorollEditor();
+    void updateQuantizeToggleBtn(bool);
 
 		// Implements EventListener interface
 		virtual void selectedPatternChangedEvent();
@@ -169,6 +170,8 @@ class PatternEditorPanel : public QWidget, public EventListener, public H2Core::
 
 		Button *			sizeDropdownBtn;
 		Button *			resDropdownBtn;
+
+    ToggleButton* quantizeEventsBtn;
  
 		bool				m_bEnablePatternResize;
 

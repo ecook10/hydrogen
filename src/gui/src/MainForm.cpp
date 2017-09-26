@@ -1406,6 +1406,20 @@ bool MainForm::eventFilter( QObject *o, QEvent *e )
       return TRUE;
       break;
 
+    // Toggle quantize
+    case Qt::Key_Q :
+      if (prefs->getQuantizeEvents()) {
+        prefs->setQuantizeEvents(false);
+        app->getPatternEditorPanel()->updateQuantizeToggleBtn(false);
+		    app->setStatusBarMessage( trUtf8( "Quantize incoming keyboard/midi events = Off" ), 2000 );
+      } else {
+        prefs->setQuantizeEvents(true);
+        app->getPatternEditorPanel()->updateQuantizeToggleBtn(true);
+		    app->setStatusBarMessage( trUtf8( "Quantize incoming keyboard/midi events = On" ), 2000 );
+      }
+      return TRUE;
+      break;
+
 
     /* Pattern Editor Controls */
 
@@ -1420,7 +1434,6 @@ bool MainForm::eventFilter( QObject *o, QEvent *e )
       return TRUE;
       break;
 
-
     // Move selected instrument up
     case Qt::Key_I :
       nSelected = engine->getSelectedInstrumentNumber() - 1;
@@ -1430,7 +1443,6 @@ bool MainForm::eventFilter( QObject *o, QEvent *e )
       }
       return TRUE;
       break;
-
 
     // Choose new instrument
     case Qt::Key_L :
