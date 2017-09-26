@@ -237,7 +237,7 @@ Preferences::Preferences()
 	m_bShowInstrumentPeaks = true;
 	m_bIsFXTabVisible = true;
 	m_nPatternEditorGridHeight = 21;
-	m_nPatternEditorGridWidth = 3;
+	m_nPatternEditorGridWidth = 1.33;
 	mainFormProperties.set(0, 0, 1000, 700, true);
 	mixerProperties.set(10, 350, 829, 276, true);
 	patternEditorProperties.set(280, 100, 706, 439, true);
@@ -570,7 +570,8 @@ void Preferences::loadPreferences( bool bGlobal )
 				m_nPatternEditorGridHeight = LocalFileMng::readXmlInt( guiNode, "patternEditorGridHeight", m_nPatternEditorGridHeight );
 
 				// pattern editor grid width
-				m_nPatternEditorGridWidth = LocalFileMng::readXmlInt( guiNode, "patternEditorGridWidth", m_nPatternEditorGridWidth );
+				// m_nPatternEditorGridWidth = LocalFileMng::readXmlInt( guiNode, "patternEditorGridWidth", m_nPatternEditorGridWidth );
+        INFOLOG( QString("Using width %1").arg(m_nPatternEditorGridWidth) );
 
 				// mainForm window properties
 				setMainFormProperties( readWindowProperties( guiNode, "mainForm_properties", mainFormProperties ) );
@@ -938,7 +939,6 @@ void Preferences::savePreferences()
 		LocalFileMng::writeXmlBool( guiNode, "patternEditorUsingTriplets", m_bPatternEditorUsingTriplets );
 		LocalFileMng::writeXmlBool( guiNode, "showInstrumentPeaks", m_bShowInstrumentPeaks );
 		LocalFileMng::writeXmlBool( guiNode, "isFXTabVisible", m_bIsFXTabVisible );
-
 
 		// MainForm window properties
 		writeWindowProperties( guiNode, "mainForm_properties", mainFormProperties );
