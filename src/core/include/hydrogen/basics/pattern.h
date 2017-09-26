@@ -61,7 +61,7 @@ class Pattern : public H2Core::Object
 		 * \param category the name of the pattern
 		 * \param length the length of the pattern
 		 */
-		Pattern( const QString& name="Pattern", const QString& info="", const QString& category="not_categorized", int length=MAX_NOTES );
+		Pattern( const QString& name="Pattern", const QString& info="", const QString& category="not_categorized", int length=MAX_NOTES*4 );
 		/** copy constructor */
 		Pattern( Pattern* other );
 		/** destructor */
