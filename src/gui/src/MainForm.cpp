@@ -1297,6 +1297,7 @@ bool MainForm::eventFilter( QObject *o, QEvent *e )
 		//int songnumber = 0;
 		HydrogenApp* app = HydrogenApp::get_instance();
 		Hydrogen* engine = Hydrogen::get_instance();
+    Preferences* prefs = Preferences::get_instance();
 
     INFOLOG( to_string(k->key()).c_str() );
 
@@ -1381,16 +1382,28 @@ bool MainForm::eventFilter( QObject *o, QEvent *e )
 
     /* Misc Controls */
 
-    case Qt::Key_R :  // Toggle record
-      return FALSE;
+    // Toggle record
+    case Qt::Key_R :
+      if (prefs->getRecordEvents()) {
+        prefs->setRecordEvents(false);
+        app->setScrollStatusBarMessage(trUtf8("Record midi events = Off"), 2000 );
+      } else {
+        prefs->setRecordEvents(true);
+        app->setScrollStatusBarMessage(trUtf8("Record midi events = On"), 2000 );
+      }
+      return TRUE;
       break;
 
-    case Qt::Key_M:   // Toggle mixer
-      return FALSE;
+    // Toggle mixer
+    case Qt::Key_M :
+      app->showMixer( !app->getMixer()->isVisible() );
+      return TRUE;
       break;
 
-    case Qt::Key_C:   // Toggle metronome
-      return FALSE;
+    // Toggle metronome
+    case Qt::Key_C :
+	    prefs->m_bUseMetronome = !prefs->m_bUseMetronome;
+      return TRUE;
       break;
 
 
