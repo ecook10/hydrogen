@@ -70,12 +70,14 @@ class SongEditorPanel : public QWidget, public EventListener, public H2Core::Obj
 		///< pattern at idx within pattern list will be destroyed
 		void revertaddEmptyPattern( int idx );
 
+  public slots:
+		void newPatBtnClicked( Button* );
+
 	private slots:
 		void on_patternListScroll();
 		void on_EditorScroll();
 		void syncToExternalScrollBar();
 
-		void newPatBtnClicked( Button* );
 		void upBtnClicked( Button* );
 		void downBtnClicked( Button* );
 		void clearSequence( Button* );

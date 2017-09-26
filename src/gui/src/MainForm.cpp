@@ -259,7 +259,7 @@ void MainForm::createMenuBar()
 	m_pFileMenu->addSeparator();				// -----
 
 	m_pFileMenu->addAction( trUtf8( "&Open" ), this, SLOT( action_file_open() ), QKeySequence( "Ctrl+O" ) );
-	m_pFileMenu->addAction( trUtf8( "Open &Demo" ), this, SLOT( action_file_openDemo() ), QKeySequence( "Ctrl+D" ) );
+	// m_pFileMenu->addAction( trUtf8( "Open &Demo" ), this, SLOT( action_file_openDemo() ), QKeySequence( "Ctrl+D" ) );
 
 	m_pRecentFilesMenu = m_pFileMenu->addMenu( trUtf8( "Open &recent" ) );
 
@@ -1470,7 +1470,6 @@ bool MainForm::eventFilter( QObject *o, QEvent *e )
       return TRUE;
       break;
 
-
     // Move selected pattern up
     case Qt::Key_W :
       nSelected = engine->getSelectedPatternNumber() - 1;
@@ -1481,14 +1480,21 @@ bool MainForm::eventFilter( QObject *o, QEvent *e )
       return TRUE;
       break;
 
-    case Qt::Key_D :  // Insert new pattern
-      return FALSE;
+    // Duplicate/insert new pattern
+    case Qt::Key_D :
+      if (k->modifiers() == Qt::ControlModifier) {
+        app->getSongEditorPanel()->newPatBtnClicked(NULL);
+      } else {
+        app->getSongEditorPanel()->getSongEditorPatternList()->patternPopup_copy();
+      }
+      return TRUE;
       break;
 
-    case Qt::Key_A :  // Remove pattern
-      return FALSE;
+    // Remove/duplicate pattern
+    case Qt::Key_A :
+      app->getSongEditorPanel()->getSongEditorPatternList()->patternPopup_delete();
+      return TRUE;
       break;
-
 		}
 
 		// virtual keyboard handling
