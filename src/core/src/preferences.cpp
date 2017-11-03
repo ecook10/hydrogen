@@ -237,7 +237,7 @@ Preferences::Preferences()
 	m_bShowInstrumentPeaks = true;
 	m_bIsFXTabVisible = true;
 	m_nPatternEditorGridHeight = 21;
-	m_nPatternEditorGridWidth = 1.33;
+	m_nPatternEditorGridWidth = 4.0 / 3;
 	mainFormProperties.set(0, 0, 1000, 700, true);
 	mixerProperties.set(10, 350, 829, 276, true);
 	patternEditorProperties.set(280, 100, 706, 439, true);
