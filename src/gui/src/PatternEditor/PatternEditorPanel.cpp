@@ -161,7 +161,7 @@ PatternEditorPanel::PatternEditorPanel( QWidget *pParent )
 
 
 	// quantize
-	ToggleButton* quantizeEventsBtn = new ToggleButton(
+	quantizeEventsBtn = new ToggleButton(
 			pRec,
 			"/patternEditor/btn_quant_on.png",
 			"/patternEditor/btn_quant_off.png",
@@ -688,6 +688,10 @@ void PatternEditorPanel::quantizeEventsBtnClick(Button *ref)
 	}
 }
 
+void PatternEditorPanel::updateQuantizeToggleBtn(bool isPressed)
+{
+  quantizeEventsBtn->setPressed(isPressed);
+}
 
 
 

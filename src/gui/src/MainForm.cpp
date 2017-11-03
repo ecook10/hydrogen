@@ -54,6 +54,7 @@
 #include "Mixer/Mixer.h"
 #include "InstrumentEditor/InstrumentEditorPanel.h"
 #include "PatternEditor/PatternEditorPanel.h"
+#include "PatternEditor/PatternEditorInstrumentList.h"
 #include "SongEditor/SongEditor.h"
 #include "SongEditor/SongEditorPanel.h"
 #include "SoundLibrary/SoundLibraryPanel.h"
@@ -258,7 +259,7 @@ void MainForm::createMenuBar()
 	m_pFileMenu->addSeparator();				// -----
 
 	m_pFileMenu->addAction( trUtf8( "&Open" ), this, SLOT( action_file_open() ), QKeySequence( "Ctrl+O" ) );
-	m_pFileMenu->addAction( trUtf8( "Open &Demo" ), this, SLOT( action_file_openDemo() ), QKeySequence( "Ctrl+D" ) );
+	// m_pFileMenu->addAction( trUtf8( "Open &Demo" ), this, SLOT( action_file_openDemo() ), QKeySequence( "Ctrl+D" ) );
 
 	m_pRecentFilesMenu = m_pFileMenu->addMenu( trUtf8( "Open &recent" ) );
 
@@ -276,7 +277,7 @@ void MainForm::createMenuBar()
 
 	m_pFileMenu->addAction( trUtf8( "Export &MIDI file" ), this, SLOT( action_file_export_midi() ), QKeySequence( "Ctrl+M" ) );
 	m_pFileMenu->addAction( trUtf8( "&Export song" ), this, SLOT( action_file_export() ), QKeySequence( "Ctrl+E" ) );
-	m_pFileMenu->addAction( trUtf8( "Export &LilyPond file" ), this, SLOT( action_file_export_lilypond() ), QKeySequence( "Ctrl+L" ) );
+	m_pFileMenu->addAction( trUtf8( "Export &LilyPond file" ), this, SLOT( action_file_export_lilypond() ), QKeySequence( "Ctrl+Shift+L" ) );
 
 
 #ifndef Q_OS_MACX
@@ -1296,6 +1297,13 @@ bool MainForm::eventFilter( QObject *o, QEvent *e )
 		//int songnumber = 0;
 		HydrogenApp* app = HydrogenApp::get_instance();
 		Hydrogen* engine = Hydrogen::get_instance();
+    Preferences* prefs = Preferences::get_instance();
+
+    INFOLOG( to_string(k->key()).c_str() );
+
+    int nSelected;
+    int nCount;
+
 		switch (k->key()) {
 		case Qt::Key_Space:
 			onPlayStopAccelEvent();
@@ -1360,14 +1368,144 @@ bool MainForm::eventFilter( QObject *o, QEvent *e )
 			return TRUE;
 			break;
 
-		case Qt::Key_L :
+		case Qt::Key_T :
 			engine->togglePlaysSelected();
-			QString msg = Preferences::get_instance()->patternModePlaysSelected() ? "Single pattern mode" : "Stacked pattern mode";
-			app->setStatusBarMessage( msg, 5000 );
+			app->setStatusBarMessage(
+          Preferences::get_instance()->patternModePlaysSelected() ? "Single pattern mode" : "Stacked pattern mode",
+          5000
+      );
 			app->getSongEditorPanel()->setModeActionBtn( Preferences::get_instance()->patternModePlaysSelected() );
 			app->getSongEditorPanel()->updateAll();
 			return TRUE;
 			break;
+
+
+    /* Misc Controls */
+
+    // Toggle record
+    case Qt::Key_R :
+      if (prefs->getRecordEvents()) {
+        prefs->setRecordEvents(false);
+        app->setScrollStatusBarMessage(trUtf8("Record midi events = Off"), 2000 );
+      } else {
+        prefs->setRecordEvents(true);
+        app->setScrollStatusBarMessage(trUtf8("Record midi events = On"), 2000 );
+      }
+      return TRUE;
+      break;
+
+    // Toggle mixer
+    case Qt::Key_M :
+      app->showMixer( !app->getMixer()->isVisible() );
+      return TRUE;
+      break;
+
+    // Toggle metronome
+    case Qt::Key_C :
+	    prefs->m_bUseMetronome = !prefs->m_bUseMetronome;
+      return TRUE;
+      break;
+
+    // Toggle quantize
+    case Qt::Key_Q :
+      if (prefs->getQuantizeEvents()) {
+        prefs->setQuantizeEvents(false);
+        app->getPatternEditorPanel()->updateQuantizeToggleBtn(false);
+		    app->setStatusBarMessage( trUtf8( "Quantize incoming keyboard/midi events = Off" ), 2000 );
+      } else {
+        prefs->setQuantizeEvents(true);
+        app->getPatternEditorPanel()->updateQuantizeToggleBtn(true);
+		    app->setStatusBarMessage( trUtf8( "Quantize incoming keyboard/midi events = On" ), 2000 );
+      }
+      return TRUE;
+      break;
+
+
+    /* Pattern Editor Controls */
+
+    // Move selected instrument down
+    case Qt::Key_K :
+      nSelected = engine->getSelectedInstrumentNumber() + 1;
+      nCount = engine->getSong()->get_instrument_list()->size();
+
+      if (nSelected < nCount) {
+        engine->setSelectedInstrumentNumber(nSelected);
+      }
+      return TRUE;
+      break;
+
+    // Move selected instrument up
+    case Qt::Key_I :
+      nSelected = engine->getSelectedInstrumentNumber() - 1;
+
+      if (nSelected > -1) {
+        engine->setSelectedInstrumentNumber(nSelected);
+      }
+      return TRUE;
+      break;
+
+    // Choose new instrument
+    case Qt::Key_L :
+      if (k->modifiers() == Qt::ControlModifier) {
+        // Insert
+        // TODO prompt for starting layer after inserting empty instrument
+        app->getPatternEditorPanel()->getInstrumentList()->insertInstrument();
+      } else {
+        // Replace
+        InstrumentEditor::get_instance()->loadLayer();
+      }
+      // TODO maybe automatically enable rename
+      return TRUE;
+      break;
+
+    // Remove instrument
+    case Qt::Key_J :
+      if (k->modifiers() == Qt::ControlModifier) {
+        app->getPatternEditorPanel()->getInstrumentList()->deleteCurrentInstrument();
+      } else {
+        return FALSE;
+      }
+      break;
+
+
+    /* Song Editor Controls */
+
+    // Move selected pattern down
+    case Qt::Key_S :
+      nSelected = engine->getSelectedPatternNumber() + 1;
+      nCount = engine->getSong()->get_pattern_list()->size();
+
+      if (nSelected < nCount) {
+        engine->setSelectedPatternNumber(nSelected);
+      }
+      return TRUE;
+      break;
+
+    // Move selected pattern up
+    case Qt::Key_W :
+      nSelected = engine->getSelectedPatternNumber() - 1;
+
+      if (nSelected > -1) {
+        engine->setSelectedPatternNumber(nSelected);
+      }
+      return TRUE;
+      break;
+
+    // Duplicate/insert new pattern
+    case Qt::Key_D :
+      if (k->modifiers() == Qt::ControlModifier) {
+        app->getSongEditorPanel()->newPatBtnClicked(NULL);
+      } else {
+        app->getSongEditorPanel()->getSongEditorPatternList()->patternPopup_copy();
+      }
+      return TRUE;
+      break;
+
+    // Remove/duplicate pattern
+    case Qt::Key_A :
+      app->getSongEditorPanel()->getSongEditorPatternList()->patternPopup_delete();
+      return TRUE;
+      break;
 		}
 
 		// virtual keyboard handling

@@ -1319,14 +1319,7 @@ void  DrumPatternEditor::functionDropInstrumentRedoAction( QString sDrumkitName,
 		}
 
 		// create a new valid ID for this instrument
-		int nID = -1;
-		for ( uint i = 0; i < pEngine->getSong()->get_instrument_list()->size(); ++i ) {
-			Instrument* pInstr = pEngine->getSong()->get_instrument_list()->get( i );
-			if ( pInstr->get_id() > nID ) {
-				nID = pInstr->get_id();
-			}
-		}
-		++nID;
+	  int nID = pEngine->getSong()->get_instrument_list()->newID();
 
 		pNewInstrument->set_id( nID );
 
@@ -1404,14 +1397,7 @@ void DrumPatternEditor::functionDeleteInstrumentUndoAction( std::list< H2Core::N
 	if( pNewInstrument == NULL ) return;
 
 	// create a new valid ID for this instrument
-	int nID = -1;
-	for ( uint i = 0; i < pEngine->getSong()->get_instrument_list()->size(); ++i ) {
-		Instrument* pInstr = pEngine->getSong()->get_instrument_list()->get( i );
-		if ( pInstr->get_id() > nID ) {
-			nID = pInstr->get_id();
-		}
-	}
-	++nID;
+	int nID = pEngine->getSong()->get_instrument_list()->newID();
 
 	pNewInstrument->set_id( nID );
 //	pNewInstrument->set_adsr( new ADSR( 0, 0, 1.0, 1000 ) );
@@ -1475,14 +1461,7 @@ void DrumPatternEditor::functionAddEmptyInstrumentRedo()
 	InstrumentList* pList = pSong->get_instrument_list();
 
 	// create a new valid ID for this instrument
-	int nID = -1;
-	for ( uint i = 0; i < pList->size(); ++i ) {
-		Instrument* pInstr = pList->get( i );
-		if ( pInstr->get_id() > nID ) {
-			nID = pInstr->get_id();
-		}
-	}
-	++nID;
+	int nID = pList->newID();
 
 	Instrument *pNewInstr = new Instrument( nID, "New instrument");
 	pList->add( pNewInstr );

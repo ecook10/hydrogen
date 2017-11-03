@@ -464,6 +464,29 @@ void InstrumentLine::functionDeleteInstrument()
 	HydrogenApp::get_instance()->m_undoStack->push( action );
 }
 
+void InstrumentLine::functionInsertInstrument()
+{
+  // TODO make this an UndoAction similar to `functionDeleteInstrument`
+  // TODO should we be locking the audio engine?
+
+  Hydrogen* engine = Hydrogen::get_instance();
+  Song* pSong = engine->getSong();
+  InstrumentList* pList = pSong->get_instrument_list();
+
+	// create a new valid ID for this instrument
+	int nID = pList->newID();
+	Instrument *pNewInstr = new Instrument( nID, "New instrument");
+	pList->insert( m_nInstrumentNumber+1, pNewInstr );
+
+	#ifdef H2CORE_HAVE_JACK
+	engine->renameJackPorts( pSong );
+	#endif
+
+  //pSong->set_is_modified( true );
+  // TODO what is the effect of not enabling this?
+  // ...asking for a friend
+}
+
 
 
 //////
@@ -519,6 +542,13 @@ InstrumentLine* PatternEditorInstrumentList::createInstrumentLine()
 {
 	InstrumentLine *pLine = new InstrumentLine(this);
 	return pLine;
+}
+
+
+InstrumentLine* PatternEditorInstrumentList::getCurrInstrumentLine()
+{
+	int nCurrInstr =Hydrogen::get_instance()->getSelectedInstrumentNumber();
+  return m_pInstrumentLine[nCurrInstr];
 }
 
 
@@ -690,5 +720,12 @@ void PatternEditorInstrumentList::mouseMoveEvent(QMouseEvent *event)
 	QWidget::mouseMoveEvent(event);
 }
 
+void PatternEditorInstrumentList::deleteCurrentInstrument()
+{
+  getCurrInstrumentLine()->functionDeleteInstrument();
+}
 
-
+void PatternEditorInstrumentList::insertInstrument()
+{
+  getCurrInstrumentLine()->functionInsertInstrument();
+}
