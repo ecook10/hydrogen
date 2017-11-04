@@ -337,7 +337,7 @@ public:
 	unsigned			getPatternEditorGridHeight();
 	void				setPatternEditorGridHeight( unsigned value );
 
-	unsigned			getPatternEditorGridWidth();
+	float 			getPatternEditorGridWidth();
 	void				setPatternEditorGridWidth( unsigned value );
 
 	void				setColoringMethodAuxValue( int value );
@@ -477,7 +477,7 @@ private:
 	bool				m_bIsFXTabVisible;
 	bool				m_bUseRelativeFilenamesForPlaylists;
 	unsigned			m_nPatternEditorGridHeight;
-	unsigned			m_nPatternEditorGridWidth;
+	float 			m_nPatternEditorGridWidth;
 	WindowProperties	mainFormProperties;
 	WindowProperties	mixerProperties;
 	WindowProperties	patternEditorProperties;
@@ -743,7 +743,7 @@ inline void Preferences::setPatternEditorGridHeight( unsigned value ) {
 	m_nPatternEditorGridHeight = value;
 }
 
-inline unsigned Preferences::getPatternEditorGridWidth() {
+inline float Preferences::getPatternEditorGridWidth() {
 	return m_nPatternEditorGridWidth;
 }
 inline void Preferences::setPatternEditorGridWidth( unsigned value ) {
