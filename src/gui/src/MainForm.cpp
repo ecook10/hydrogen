@@ -1299,8 +1299,6 @@ bool MainForm::eventFilter( QObject *o, QEvent *e )
 		Hydrogen* engine = Hydrogen::get_instance();
     Preferences* prefs = Preferences::get_instance();
 
-    INFOLOG( to_string(k->key()).c_str() );
-
     int nSelected;
     int nCount;
 
