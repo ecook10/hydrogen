@@ -1097,6 +1097,30 @@ void MainForm::onBPMMinusAccelEvent(float delta)
 }
 
 
+void MainForm::toggleNudgeForward()
+{
+  if (toggleMode == "") {
+    toggleMode = "forward";
+    onBPMPlusAccelEvent(0.5);
+  } else {
+    toggleMode = "";
+    onBPMMinusAccelEvent(0.5);
+  }
+}
+
+
+void MainForm::toggleNudgeBackward()
+{
+  if (toggleMode == "") {
+    toggleMode = "backward";
+    onBPMMinusAccelEvent(0.5);
+  } else {
+    toggleMode = "";
+    onBPMPlusAccelEvent(0.5);
+  }
+}
+
+
 
 void MainForm::onSaveAsAccelEvent()
 {
@@ -1289,7 +1313,26 @@ bool MainForm::eventFilter( QObject *o, QEvent *e )
 {
 	UNUSED( o );
 
-	if ( e->type() == QEvent::KeyPress) {
+	if ( e->type() == QEvent::KeyRelease) {
+		QKeyEvent *k = (QKeyEvent *)e;
+
+		switch (k->key()) {
+		case Qt::Key_Greater:
+      if (!k->isAutoRepeat()) {
+        toggleNudgeForward();
+      }
+			return TRUE; // eat event
+			break;
+
+		case Qt::Key_Less:
+      if (!k->isAutoRepeat()) {
+        toggleNudgeBackward();
+      }
+			return TRUE; // eat event
+			break;
+    }
+
+  } else if ( e->type() == QEvent::KeyPress) {
 		// special processing for key press
 		QKeyEvent *k = (QKeyEvent *)e;
 
@@ -1343,6 +1386,20 @@ bool MainForm::eventFilter( QObject *o, QEvent *e )
 
 		case Qt::Key_Underscore:
 			onBPMMinusAccelEvent(5.0);
+			return TRUE; // eat event
+			break;
+
+		case Qt::Key_Greater:
+      if (!k->isAutoRepeat()) {
+        toggleNudgeForward();
+      }
+			return TRUE; // eat event
+			break;
+
+		case Qt::Key_Less:
+      if (!k->isAutoRepeat()) {
+        toggleNudgeBackward();
+      }
 			return TRUE; // eat event
 			break;
 

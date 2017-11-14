@@ -171,6 +171,10 @@ public slots:
 
                 bool handleSelectNextPrevSongOnPlaylist(int step);
 
+    QString toggleMode = NULL;
+    void toggleNudgeForward();
+    void toggleNudgeBackward();
+
 };
 
 #endif
