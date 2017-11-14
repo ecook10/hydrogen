@@ -1070,28 +1070,28 @@ void MainForm::onRestartAccelEvent()
 
 
 
-void MainForm::onBPMPlusAccelEvent()
+void MainForm::onBPMPlusAccelEvent(float delta)
 {
 	Hydrogen* pEngine = Hydrogen::get_instance();
 	AudioEngine::get_instance()->lock( RIGHT_HERE );
 
 	Song* pSong = pEngine->getSong();
 	if (pSong->__bpm  < 300) {
-		pEngine->setBPM( pSong->__bpm + 0.1 );
+		pEngine->setBPM( pSong->__bpm + delta );
 	}
 	AudioEngine::get_instance()->unlock();
 }
 
 
 
-void MainForm::onBPMMinusAccelEvent()
+void MainForm::onBPMMinusAccelEvent(float delta)
 {
 	Hydrogen* pEngine = Hydrogen::get_instance();
 	AudioEngine::get_instance()->lock( RIGHT_HERE );
 
 	Song* pSong = pEngine->getSong();
 	if (pSong->__bpm > 40 ) {
-		pEngine->setBPM( pSong->__bpm - 0.1 );
+		pEngine->setBPM( pSong->__bpm - delta );
 	}
 	AudioEngine::get_instance()->unlock();
 }
@@ -1318,13 +1318,31 @@ bool MainForm::eventFilter( QObject *o, QEvent *e )
 			return TRUE; // eat event
 			break;
 
+		case Qt::Key_Equal:
+      if (k->modifiers() == Qt::ControlModifier) {
+			  onBPMPlusAccelEvent(0.1);
+      } else {
+			  onBPMPlusAccelEvent(1.0);
+      }
+			return TRUE; // eat event
+			break;
+
 		case Qt::Key_Plus:
-			onBPMPlusAccelEvent();
+			onBPMPlusAccelEvent(5.0);
 			return TRUE; // eat event
 			break;
 
 		case Qt::Key_Minus:
-			onBPMMinusAccelEvent();
+      if (k->modifiers() == Qt::ControlModifier) {
+			  onBPMMinusAccelEvent(0.1);
+      } else {
+			  onBPMMinusAccelEvent(1.0);
+      }
+			return TRUE; // eat event
+			break;
+
+		case Qt::Key_Underscore:
+			onBPMMinusAccelEvent(5.0);
 			return TRUE; // eat event
 			break;
 

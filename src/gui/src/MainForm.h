@@ -103,8 +103,8 @@ public slots:
 
 		void onPlayStopAccelEvent();
 		void onRestartAccelEvent();
-		void onBPMPlusAccelEvent();
-		void onBPMMinusAccelEvent();
+		void onBPMPlusAccelEvent(float delta=1.0);
+		void onBPMMinusAccelEvent(float delta=1.0);
 		void onSaveAsAccelEvent();
 		void onSaveAccelEvent();
 		void onOpenAccelEvent();
