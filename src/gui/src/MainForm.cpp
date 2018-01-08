@@ -1101,10 +1101,10 @@ void MainForm::toggleNudgeForward()
 {
   if (toggleMode == "") {
     toggleMode = "forward";
-    onBPMPlusAccelEvent(0.5);
+    onBPMPlusAccelEvent(2.0);
   } else {
     toggleMode = "";
-    onBPMMinusAccelEvent(0.5);
+    onBPMMinusAccelEvent(2.0);
   }
 }
 
@@ -1113,10 +1113,10 @@ void MainForm::toggleNudgeBackward()
 {
   if (toggleMode == "") {
     toggleMode = "backward";
-    onBPMMinusAccelEvent(0.5);
+    onBPMMinusAccelEvent(2.0);
   } else {
     toggleMode = "";
-    onBPMPlusAccelEvent(0.5);
+    onBPMPlusAccelEvent(2.0);
   }
 }
 
